@@ -26,9 +26,7 @@ func main() {
 	for i, duration := range durations {
 		wg.Add(1)
 
-		func() {
-			go doSomething(i+1, duration, &wg)
-		}()
+		go doSomething(i+1, duration, &wg)
 	}
 
 	wg.Wait()
