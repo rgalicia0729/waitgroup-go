@@ -6,20 +6,29 @@ import (
 	"time"
 )
 
-func doSomething(i int, wg *sync.WaitGroup) {
+func doSomething(i int, t time.Duration, wg *sync.WaitGroup) {
 	defer wg.Done()
 
-	time.Sleep(2 * time.Second)
-	fmt.Printf("Id: %d\n", i)
+	time.Sleep(t)
+	fmt.Printf("Se ejecuto gorutina %v\n", i)
 }
 
 func main() {
+	durations := []time.Duration{
+		time.Second * 2,
+		time.Second * 2,
+		time.Second * 1,
+		time.Second * 3,
+	}
+
 	var wg sync.WaitGroup
 
-	for i := 1; i <= 10; i++ {
+	for i, duration := range durations {
 		wg.Add(1)
 
-		go doSomething(i, &wg)
+		func() {
+			go doSomething(i+1, duration, &wg)
+		}()
 	}
 
 	wg.Wait()
